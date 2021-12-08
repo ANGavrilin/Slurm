@@ -1,1 +1,24 @@
 # Slurm
+server {
+  listen 80;
+  server_name _;
+  root /var/www/html/;
+  index index.php index.html index.htm;
+
+  location / {
+    try_files $uri $uri/ =404;
+  }
+
+  location ~ \.php$ {
+    fastcgi_pass unix:/run/php/php7.3-fpm.sock;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    include fastcgi_params;
+    include snippets/fastcgi-php.conf;
+  }
+
+  location ~ /\.ht {
+      access_log off;
+      log_not_found off;
+      deny all;
+  }
+}
